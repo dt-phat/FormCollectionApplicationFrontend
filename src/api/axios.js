@@ -1,19 +1,19 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: "http://localhost:8080",
+    baseURL: "http://localhost:8080/api",
     headers: {
         "Content-Type": "application/json",
     },
 });
 
-api.interceptors.request.use(
-    (config) => {
-        console.log("Đang gửi request:", config);
-        return config;
-    },
-    (error) => Promise.reject(error)
-);
+api.interceptors.request.use((config) => {
+    const token = localStorage.getItem("token"); // Lấy token từ localStorage
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`; // Gắn token vào headers
+    }
+    return config;
+}, (error) => Promise.reject(error));
 
 api.interceptors.response.use(
     (response) => response.data,
