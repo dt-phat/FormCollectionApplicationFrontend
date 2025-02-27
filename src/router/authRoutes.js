@@ -1,5 +1,5 @@
-import LoginView from "../view/LoginView.vue";
-import RegisterView from "../view/RegisterView.vue";
+import LoginView from "../views/LoginView.vue";
+import RegisterView from "../views/RegisterView.vue";
 
 export default [
     { path: "/login", component: LoginView },

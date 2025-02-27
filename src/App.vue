@@ -1,25 +1,30 @@
 <template>
     <div id="app">
-        <router-view></router-view>
+        <NavBar />
+        <div class="mt-20">
+            <router-view></router-view>
+        </div>
     </div>
 </template>
 
 <script>
+import NavBar from './components/NavBar.vue';
+
 export default {
     name: "App",
+    components: {
+        NavBar,
+    }
 };
 </script>
 
-<style scoped>
+<style>
 body {
     font-family: Arial, sans-serif;
-    background-color: #f8f9fa;
     margin: 0;
     padding: 0;
 }
-</style>
 
-<style>
 * {
     box-sizing: border-box;
 }

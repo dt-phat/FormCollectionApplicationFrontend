@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { getUserInfo } from "../api/info";
+import { getUserInfo } from "../api/infoApi";
 
 export default {
     data() {
