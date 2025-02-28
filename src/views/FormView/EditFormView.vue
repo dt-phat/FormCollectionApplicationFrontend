@@ -1,22 +1,22 @@
 <template>
     <div class="container mx-auto p-8 bg-purple-200 min-h-screen flex flex-col items-center">
         <div class="w-full max-w-3xl bg-white shadow-md rounded-lg p-6">
-            <h1 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Tạo Form Mới</h1>
+            <h1 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Cập Nhật Form</h1>
 
             <input v-model="form.name" type="text" placeholder="Tiêu đề form"
                 class="w-full p-3 border-b border-gray-300 outline-none text-lg font-medium mb-3">
-            <textarea v-model="form.description" placeholder="Mô tả"
+            <textarea v-model="form.introduction" placeholder="Mô tả"
                 class="w-full p-3 border-b border-gray-300 outline-none text-lg text-gray-600 mb-3"></textarea>
         </div>
         <div class="w-full max-w-3xl bg-white shadow-md rounded-lg p-4 mt-4" v-for="(question, index) in form.questions"
             :key="index">
             <label class="w-full p-2 outline-none text-lg mb-3">Câu hỏi số {{ index + 1 }}: </label>
             <select v-model="question.type" class="w-full p-2 border-b border-gray-300 outline-none mb-3">
-                <option value="text">Trả lời ngắn</option>
-                <option value="checkbox">Hộp kiểm</option>
-                <option value="radio">Nút radio</option>
+                <option value="TEXT">Trả lời ngắn</option>
+                <option value="CHECKBOX">Hộp kiểm</option>
+                <option value="RADIO">Nút radio</option>
             </select>
-            <input v-model="question.text" type="text" placeholder="Nội dung câu hỏi"
+            <input v-model="question.question" type="text" placeholder="Nội dung câu hỏi"
                 class="w-full p-2 border-b border-gray-300 outline-none text-lg mb-3">
 
             <div v-if="question.type === 'checkbox' || question.type === 'radio'">
@@ -33,26 +33,26 @@
             <button @click="removeQuestion(index)" class="text-red-500 mt-2 hover:text-red-700">Xóa Câu Hỏi</button>
         </div>
 
-        <div class="w-full max-w-3xl bg-white -mt-4 shadow-md rounded-lg p-4">
+        <div class="w-full max-w-3xl bg-white -mt-4 shadow-md text-lg font-semibold rounded-lg p-4">
             <button @click="showQuestionTypeModal = true"
-                class="w-full max-w-3xl bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition-all">
-                + Thêm Câu Hỏi
+                class="w-full max-w-3xl bg-purple-600 text-white py-4 rounded-lg hover:bg-purple-700 transition-all">
+                <i class="fa-solid fa-plus mr-2"></i> Thêm Câu Hỏi
             </button>
         </div>
 
 
 
-        <div class="w-full max-w-3xl px-3 py-4 mt-6 flex rounded-lg justify-around bg-white">
+        <div class="w-full max-w-3xl px-3 py-8 -mt-3 flex rounded-lg justify-around bg-white">
             <div>
-                <button @click="cancelForm"
-                    class="w-[355px] bg-gray-500 text-white py-3 rounded-lg hover:bg-gray-600 transition-all text-lg font-semibold">
-                    Hủy Tạo Form
-                </button>
+                <router-link :to="`/project/${projectId}`"
+                    class="block text-center w-[350px] bg-rose-500 text-white py-3 rounded-lg hover:bg-rose-600 transition-all text-lg font-semibold hover:scale-105">
+                    <i class="fa-solid fa-delete-left mr-2"></i> Trở Về
+                </router-link>
             </div>
             <div>
-                <button @click="publishForm"
-                    class="w-[355px] bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-all text-lg font-semibold">
-                    Xuất Bản Form
+                <button @click="saveForm"
+                    class="block w-[350px] bg-indigo-500 text-white py-3 rounded-lg hover:bg-indigo-700 transition-all text-lg font-semibold hover:scale-105">
+                    <i class="fa-solid fa-file-export mr-2"></i> Lưu Form
                 </button>
             </div>
         </div>
@@ -64,9 +64,9 @@
             <div class="bg-white p-6 rounded-lg shadow-lg w-80 opacity-100">
                 <h2 class="text-lg font-semibold mb-4">Chọn Loại Câu Hỏi</h2>
                 <select v-model="selectedQuestionType" class="w-full p-2 border border-gray-300 rounded-lg mb-4">
-                    <option value="text">Trả lời ngắn</option>
-                    <option value="checkbox">Hộp kiểm</option>
-                    <option value="radio">Nút radio</option>
+                    <option value="TEXT">Trả lời ngắn</option>
+                    <option value="CHECKBOX">Hộp kiểm</option>
+                    <option value="RADIO">Nút radio</option>
                 </select>
                 <div class="flex justify-end gap-3">
                     <button @click="showQuestionTypeModal = false"
@@ -80,21 +80,30 @@
 </template>
 
 <script>
+import { getForm } from '../../api/formApi';
+
 export default {
+    props: {
+        formId: String,
+    },
     data() {
         return {
             form: {
                 name: "",
-                description: "",
+                introduction: "",
                 questions: []
             },
             showQuestionTypeModal: false,
-            selectedQuestionType: "text"
+            selectedQuestionType: "TEXT"
         };
     },
     methods: {
+        async getForm() {
+            this.form = await getForm("123", this.formId);
+            console.log(this.form);
+        },
         addQuestion() {
-            this.form.questions.push({ text: "", type: this.selectedQuestionType, options: [] });
+            this.form.questions.push({ question: "", type: this.selectedQuestionType, options: [] });
             this.showQuestionTypeModal = false;
         },
         removeQuestion(index) {
@@ -107,9 +116,11 @@ export default {
             question.options.splice(index, 1);
         },
         saveForm() {
-            console.log("Form đã lưu:", this.form);
-            alert("Form đã được lưu thành công!");
+            createForm(this.projectId, this.form);
         }
+    },
+    mounted() {
+        this.getForm();
     }
 };
 </script>

@@ -58,6 +58,7 @@
 </template>
 
 <script>
+import { getAllProjects } from '../../api/projectApi';
 export default {
     data() {
         return {
@@ -65,9 +66,6 @@ export default {
             showProjectForm: false,
             newProject: { name: "", description: "" },
             projects: [
-                { id: 1, name: "Dự án A", description: "Mô tả dự án A" },
-                { id: 2, name: "Dự án B", description: "Mô tả dự án B" },
-                { id: 3, name: "Dự án C", description: "Mô tả dự án C" },
             ],
         };
     },
@@ -79,6 +77,9 @@ export default {
         }
     },
     methods: {
+        async getAllProjects() {
+            this.projects = await getAllProjects();
+        },
         addProject() {
             if (this.newProject.name.trim() && this.newProject.description.trim()) {
                 this.projects.push({
@@ -99,6 +100,9 @@ export default {
         },
         filterProjects() {
         }
+    },
+    mounted() {
+        this.getAllProjects();
     }
 };
 </script>

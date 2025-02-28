@@ -7,9 +7,18 @@ const api = axios.create({
     },
 });
 
+function isTokenExpired(token) {
+    try {
+        const payload = JSON.parse(atob(token.split(".")[1]));
+        return payload.exp * 1000 < Date.now();
+    } catch (error) {
+        return true;
+    }
+}
+
 api.interceptors.request.use((config) => {
     const token = localStorage.getItem("token"); // Lấy token từ localStorage
-    if (token) {
+    if (token && !isTokenExpired(token)) {
         config.headers.Authorization = `Bearer ${token}`; // Gắn token vào headers
     }
     return config;

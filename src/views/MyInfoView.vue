@@ -1,33 +1,39 @@
 <template>
-    <div class="container">
-        <h2>Thông Tin Cá Nhân</h2>
-        <div class="info-box">
-            <label>Mã người dùng:</label>
-            <input v-model="user.id" type="text" :disabled="!isEditing" />
-        </div>
-        <div class="info-box">
-            <label>Tên đăng nhập:</label>
-            <input v-model="user.username" type="text" :disabled="!isEditing" />
-        </div>
-        <div class="info-box">
-            <label>Tên:</label>
-            <input v-model="user.firstName" type="text" :disabled="!isEditing" />
-        </div>
-        <div class="info-box">
-            <label>Họ đệm:</label>
-            <input v-model="user.lastName" type="text" :disabled="!isEditing" />
-        </div>
-        <div class="info-box">
-            <label>Ngày sinh:</label>
-            <input v-model="user.dob" type="date" :disabled="!isEditing" />
-        </div>
-        <div class="btn-group">
-            <button v-if="!isEditing" @click="editProfile">Chỉnh sửa</button>
-            <button v-if="isEditing" @click="saveProfile">Lưu</button>
-            <button v-if="isEditing" @click="cancelEdit">Hủy</button>
-        </div>
+    <div class="container mx-auto p-6 bg-gray-100 min-h-screen flex flex-col items-center">
+        <div class="w-full max-w-lg bg-white shadow-lg rounded-xl p-6">
+            <h2 class="text-2xl font-semibold text-gray-800 text-center mb-6">Thông Tin Cá Nhân</h2>
 
-        <p v-if="message" class="message">{{ message }}</p>
+            <div class="space-y-4">
+                <div class="info-box">
+                    <label class="block text-gray-700 font-medium">Mã người dùng:</label>
+                    <input v-model="user.id" type="text" class="input-field" :disabled="!isEditing" />
+                </div>
+                <div class="info-box">
+                    <label class="block text-gray-700 font-medium">Tên đăng nhập:</label>
+                    <input v-model="user.username" type="text" class="input-field" :disabled="!isEditing" />
+                </div>
+                <div class="info-box">
+                    <label class="block text-gray-700 font-medium">Tên:</label>
+                    <input v-model="user.firstName" type="text" class="input-field" :disabled="!isEditing" />
+                </div>
+                <div class="info-box">
+                    <label class="block text-gray-700 font-medium">Họ đệm:</label>
+                    <input v-model="user.lastName" type="text" class="input-field" :disabled="!isEditing" />
+                </div>
+                <div class="info-box">
+                    <label class="block text-gray-700 font-medium">Ngày sinh:</label>
+                    <input v-model="user.dob" type="date" class="input-field" :disabled="!isEditing" />
+                </div>
+            </div>
+
+            <div class="flex justify-center space-x-4 mt-6">
+                <button v-if="!isEditing" @click="editProfile" class="btn-primary">Chỉnh sửa</button>
+                <button v-if="isEditing" @click="saveProfile" class="btn-success">Lưu</button>
+                <button v-if="isEditing" @click="cancelEdit" class="btn-danger">Hủy</button>
+            </div>
+
+            <p v-if="message" class="text-center text-green-600 font-medium mt-4">{{ message }}</p>
+        </div>
     </div>
 </template>
 
@@ -50,11 +56,11 @@ export default {
     },
     methods: {
         async getUserInfo() {
-            this.message = ""
+            this.message = "";
             try {
                 this.user = await getUserInfo();
             } catch (error) {
-                this.message = "Không tìm thấy người dùng!"
+                this.message = "Không tìm thấy người dùng!";
             }
         },
         editProfile() {
@@ -82,72 +88,57 @@ export default {
 </script>
 
 <style scoped>
-.container {
-    width: 500px;
-    margin: 50px auto;
-    padding: 20px;
-    background: #242424;
-    border: 1px solid #ccc;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    text-align: center;
-}
-
-h2 {
-    color: #007bff;
-    margin-bottom: 20px;
-}
-
-.info-box {
-    margin-bottom: 15px;
-    text-align: left;
-}
-
-label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-input {
+.input-field {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid #d1d5db;
     border-radius: 5px;
-    font-size: 15px;
+    font-size: 16px;
+    background-color: #f9fafb;
+    outline: none;
+    transition: border 0.3s;
 }
 
-.btn-group {
-    margin-top: 20px;
+.input-field:focus {
+    border-color: #2563eb;
 }
 
-button {
-    margin: 5px;
+.btn-primary {
+    background-color: #2563eb;
+    color: white;
     padding: 10px 15px;
-    border: none;
     border-radius: 5px;
-    cursor: pointer;
     font-weight: bold;
+    transition: background 0.3s;
 }
 
-button:first-child {
-    background-color: #007bff;
+.btn-primary:hover {
+    background-color: #1d4ed8;
+}
+
+.btn-success {
+    background-color: #16a34a;
     color: white;
-}
-
-button:nth-child(2) {
-    background-color: #28a745;
-    color: white;
-}
-
-button:last-child {
-    background-color: #dc3545;
-    color: white;
-}
-
-.message {
-    margin-top: 15px;
+    padding: 10px 15px;
+    border-radius: 5px;
     font-weight: bold;
-    color: green;
+    transition: background 0.3s;
+}
+
+.btn-success:hover {
+    background-color: #15803d;
+}
+
+.btn-danger {
+    background-color: #dc2626;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.btn-danger:hover {
+    background-color: #b91c1c;
 }
 </style>
