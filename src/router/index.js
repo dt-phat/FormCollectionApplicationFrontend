@@ -5,6 +5,7 @@ import authRoutes from "./authRoutes"
 import infoRoutes from "./infoRoutes"
 import projectRoutes from './projectRoutes';
 import formRoutes from './formRoutes';
+import userRouter from "./user.Router";
 
 const routes = [
     ...homeRoutes,
@@ -12,6 +13,7 @@ const routes = [
     ...infoRoutes,
     ...projectRoutes,
     ...formRoutes,
+    ...userRouter,
 ];
 
 const router = createRouter({
