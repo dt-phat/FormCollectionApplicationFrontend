@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import { getAllProjects } from '../../api/projectApi';
+import { getAllProjects, createProject, deleteProject } from '../../api/projectApi';
 export default {
     data() {
         return {
@@ -82,21 +82,16 @@ export default {
         },
         addProject() {
             if (this.newProject.name.trim() && this.newProject.description.trim()) {
-                this.projects.push({
-                    id: this.projects.length + 1,
-                    name: this.newProject.name,
-                    description: this.newProject.description
-                });
-                this.newProject.name = "";
-                this.newProject.description = "";
-                this.showProjectForm = false;
+                createProject({ name: this.newProject.name, description: this.newProject.description });
+                this.$router.go(0);
             }
         },
         viewProject(id) {
             this.$router.push(`/project/${id}`);
         },
-        deleteProject(id) {
-            this.projects = this.projects.filter(project => project.id !== id);
+        async deleteProject(id) {
+            await deleteProject(id);
+            this.$router.go(0);
         },
         filterProjects() {
         }

@@ -35,7 +35,9 @@ export default {
         async handleLogin() {
             try {
                 await login(this.username, this.password);
-                this.$router.push("/my-info");
+                await this.$router.push("/");
+                this.$emit("user-logged-in");
+
             } catch (error) {
                 this.errorMessage = "Tên đăng nhập hoặc mật khẩu không đúng!";
             }

@@ -16,10 +16,10 @@
                 <option value="CHECKBOX">Hộp kiểm</option>
                 <option value="RADIO">Nút radio</option>
             </select>
-            <input v-model="question.question" type="text" placeholder="Nội dung câu hỏi"
+            <input v-model="question.question" type="TEXT" placeholder="Nội dung câu hỏi"
                 class="w-full p-2 border-b border-gray-300 outline-none text-lg mb-3">
 
-            <div v-if="question.type === 'checkbox' || question.type === 'radio'">
+            <div v-if="question.type === 'CHECKBOX' || question.type === 'RADIO'">
                 <div v-for="(option, optIndex) in question.options" :key="optIndex"
                     class="flex items-center gap-2 mb-2 opacity-100">
                     <input v-model="question.options[optIndex]" type="text" placeholder="Nhập phương án"
@@ -112,8 +112,8 @@ export default {
             question.options.splice(index, 1);
         },
         saveForm() {
-            console.log(this.form);
             createForm(this.projectId, this.form);
+            this.$router.push(`/project/${this.projectId}`);
         }
     },
 };

@@ -1,41 +1,42 @@
 <template>
-    <div class="max-w-2xl mx-auto bg-white p-8 rounded-xl shadow-md mt-10 border border-gray-200">
-        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Điền Form</h1>
+    <div
+        class="max-w-3xl mx-auto bg-gradient-to-b from-purple-50 to-white p-8 rounded-xl shadow-2xl mt-10 border border-gray-200">
+        <h1 class="text-4xl font-bold text-purple-700 mb-6 text-center">Điền Form</h1>
 
         <div v-if="form">
-            <h2 class="text-2xl font-semibold text-gray-700 mb-2">{{ form.name }}</h2>
-            <p class="text-gray-500 mb-6">{{ form.description }}</p>
+            <h2 class="text-2xl font-semibold text-purple-800 mb-2">{{ form.name }}</h2>
+            <p class="text-gray-600 mb-6">{{ form.introduction }}</p>
 
             <form @submit.prevent="submitForm" class="space-y-8">
                 <div v-for="(question, index) in form.questions" :key="index"
-                    class="p-4 rounded-lg bg-gray-50 shadow-sm">
-                    <label class="block text-lg font-medium text-gray-900 mb-3">{{ question.text }}</label>
+                    class="p-5 rounded-xl bg-white shadow-md border border-gray-300 hover:shadow-lg transition duration-200">
+                    <label class="block text-lg font-medium text-purple-900 mb-3">{{ question.question }}</label>
 
                     <!-- Input Text -->
-                    <input v-if="question.type === 'text'" v-model="answers[index]" type="text"
-                        class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition shadow-sm bg-white" />
+                    <input v-if="question.type === 'TEXT'" v-model="answers[index].answer" type="text"
+                        class="w-full p-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition shadow-sm bg-gray-50" />
 
                     <!-- Checkbox -->
-                    <div v-if="question.type === 'checkbox'" class="space-y-2">
+                    <div v-if="question.type === 'CHECKBOX'" class="space-y-2">
                         <div v-for="(option, i) in question.options" :key="i" class="flex items-center space-x-3">
-                            <input type="checkbox" :value="option" v-model="answers[index]"
-                                class="w-5 h-5 text-blue-600 bg-white border-gray-300 rounded-md focus:ring-blue-500 cursor-pointer" />
-                            <label class="text-gray-800 cursor-pointer">{{ option }}</label>
+                            <input type="checkbox" :value="option" v-model="answers[index].answer"
+                                class="w-5 h-5 text-purple-600 bg-gray-100 border-gray-300 rounded-md focus:ring-purple-500 cursor-pointer transition" />
+                            <label class="text-purple-900 cursor-pointer">{{ option }}</label>
                         </div>
                     </div>
 
                     <!-- Radio -->
-                    <div v-if="question.type === 'radio'" class="space-y-2">
+                    <div v-if="question.type === 'RADIO'" class="space-y-2">
                         <div v-for="(option, i) in question.options" :key="i" class="flex items-center space-x-3">
-                            <input type="radio" :value="option" v-model="answers[index]"
-                                class="w-5 h-5 text-blue-600 bg-white border-gray-300 focus:ring-blue-500 cursor-pointer" />
-                            <label class="text-gray-800 cursor-pointer">{{ option }}</label>
+                            <input type="radio" :value="option" v-model="answers[index].answer"
+                                class="w-5 h-5 text-purple-600 bg-gray-100 border-gray-300 focus:ring-purple-500 cursor-pointer transition" />
+                            <label class="text-purple-900 cursor-pointer">{{ option }}</label>
                         </div>
                     </div>
                 </div>
 
                 <button type="submit"
-                    class="w-full bg-purple-800 hover:bg-purple-900 text-white font-semibold py-3 rounded-lg transition text-lg shadow-md">
+                    class="w-full bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 text-white font-semibold py-3 rounded-lg transition text-lg shadow-lg">
                     Gửi Form
                 </button>
             </form>
@@ -48,7 +49,12 @@
 </template>
 
 <script>
+import { getForm, submitForm } from '../../api/formApi';
+
 export default {
+    props: {
+        formId: String,
+    },
     data() {
         return {
             form: null,
@@ -59,22 +65,22 @@ export default {
         this.loadForm();
     },
     methods: {
-        loadForm() {
-            this.form = {
-                name: "Khảo sát ý kiến",
-                description: "Hãy điền vào biểu mẫu dưới đây.",
-                questions: [
-                    { text: "Bạn tên gì?", type: "text" },
-                    { text: "Bạn thích màu gì?", type: "checkbox", options: ["Đỏ", "Xanh", "Vàng"] },
-                    { text: "Giới tính của bạn?", type: "radio", options: ["Nam", "Nữ"] },
-                ]
-            };
-
-            // Gán giá trị đúng cho answers
-            this.answers = this.form.questions.map(q => q.type === "checkbox" ? [] : null);
+        async loadForm() {
+            this.form = await getForm("123", this.formId);
+            this.answers = this.form.questions.map(q =>
+                q.type === "CHECKBOX" ? { questionId: null, answer: [] } : { questionId: null, answer: null }
+            );
+            this.form.questions.forEach((q, i) => {
+                this.answers[i].questionId = q.id;
+            });
         },
-        submitForm() {
-            console.log("Dữ liệu đã gửi:", this.answers);
+        async submitForm() {
+            const data = this.answers.map((answer, index) => {
+                if (this.form.questions[index].type === "CHECKBOX")
+                    return { questionId: answer.questionId, answer: [...answer.answer].join(",") };
+                return answer;
+            })
+            await submitForm(this.formId, { answers: data });
             alert("Gửi thành công!");
         },
     }
