@@ -37,15 +37,15 @@ export default {
   methods: {
     async submitForm() {
       try {
-        // Gọi API updateUser
-        const { id, ...userData } = this.editedUser; // Loại bỏ ID khỏi body request
+        const { id, ...userData } = this.editedUser;
         const updatedUser = await updateUser(id, userData);
-        console.log("Người dùng đã cập nhật:", updatedUser);
 
-        // Emit sự kiện để cập nhật danh sách người dùng trong component cha
-        this.$emit("update", updatedUser);
-        this.$emit("close"); // Đóng form sau khi cập nhật thành công
-      } catch (error) {
+        console.log("Người dùng đã cập nhật:", updatedUser || this.editedUser);
+
+        this.$emit("update", updatedUser || this.editedUser);
+        this.$emit("close");
+      } 
+      catch (error) {
         console.error("Lỗi khi cập nhật người dùng:", error);
         this.errorMessages = "Cập nhật thất bại! Vui lòng thử lại.";
       }
