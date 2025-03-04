@@ -11,8 +11,12 @@ export const getForm = async (projectId, formId) => {
 }
 
 export const submitForm = async (formId, data) => {
-    console.log(data);
     const response = await api.post(`/${formId}/formAnswers`, data);
+    return response.result;
+}
+
+export const getFormAnswers = async (formId) => {
+    const response = await api.get(`/${formId}/formAnswers`);
     return response.result;
 }
 
