@@ -65,9 +65,11 @@
                         class="ml-auto mr-2 bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition">
                         <i class="fa-solid fa-gear mr-2"></i> Chỉnh sửa Form
                     </button>
-                    <button @click="getLink(form.id)"
-                        class="mr-2 bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition">
-                        <i class="fa-solid fa-share mr-2"></i> Chia Sẻ Form
+                    <button @click="getLink(form.id)" class="mr-2 text-white px-4 py-2 rounded-lg transition"
+                        :class="{ 'bg-gray-500': shareForms.includes(form.id), 'bg-purple-500 hover:bg-purple-700': !shareForms.includes(form.id) }">
+                        <i v-if="!shareForms.includes(form.id)" class="fa-solid fa-share mr-2"></i>
+                        <i v-else class="fa-solid fa-check mr-2"></i>
+                        Chia Sẻ Form
                     </button>
                     <button @click="deleteForm(form.id)"
                         class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition">
@@ -98,6 +100,7 @@ export default {
             project: {
 
             },
+            shareForms: [],
         };
     },
     computed: {
@@ -133,7 +136,7 @@ export default {
             }
         },
         viewForm(id) {
-            this.$router.push(`/form/${id}`);
+            this.$router.push(`/project/${this.projectId}/form/${id}`);
         },
         async deleteForm(id) {
             await deleteForm("123", id);
@@ -141,7 +144,9 @@ export default {
         },
         getLink(formId) {
             navigator.clipboard.writeText("http://localhost:5173/fill-form/" + formId);
-            alert("Link điền form đã được sao chép vào clipboard!")
+            if (!this.shareForms.includes(formId)) {
+                this.shareForms.push(formId);
+            }
         },
         filterForm() {
 

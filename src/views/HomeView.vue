@@ -1,22 +1,32 @@
 <template>
     <div class="min-h-screen p-6">
-        <div class="flex justify-center gap-10">
-            <router-link to="/project"
-                class="flex w-50 justify-center items-center bg-red-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-red-700">
-                <i class="fa-solid fa-diagram-project mr-2"></i> Dự Án Của Tôi
+        <div class="flex justify-center gap-50 my-10 bg-gray-100 h-40 algin-center">
+            <router-link to="/project" class="flex w-75 h-20 justify-center items-center bg-red-500 outline-3 outline-red-600 outline-offset-2
+                text-white text-2xl px-6 py-3 rounded-lg shadow-md hover:bg-red-700">
+                <i class="fa-solid fa-diagram-project mr-4"></i> Quản Lý Dự Án
             </router-link>
             <router-link
-                class="flex w-50 justify-center items-center bg-purple-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-purple-700"
+                class="flex w-75 h-20 justify-center items-center bg-blue-500 text-white text-2xl outline-3 outline-blue-600 outline-offset-2 px-6 py-3 rounded-lg shadow-md hover:bg-blue-700"
                 @click="createProject">
-                <i class="fas fa-plus mr-2"></i> Dự Án Mới
+                <i class="fa-solid fa-table-list mr-4"></i> Xem Form Đã Điền
             </router-link>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="mb-6 flex justify-center gap-4">
+            <input v-model="searchQuery" type="text" placeholder="Tìm kiếm form..."
+                class="w-full max-w-md p-3 border border-gray-300 rounded-lg outline-none text-lg shadow-sm focus:ring-2 focus:ring-blue-400">
+            <button @click="searchForms"
+                class="bg-blue-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700">
+                Tìm kiếm
+            </button>
         </div>
 
         <!-- Project List -->
         <section class="mt-8">
             <h3 class="text-lg font-semibold text-gray-700 mb-4">Recent Forms</h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                <div v-for="(project, index) in projects" :key="index"
+                <div v-for="(project, index) in filteredProjects" :key="index"
                     class="bg-white p-4 rounded-lg shadow hover:shadow-lg cursor-pointer transition"
                     @click="openProject(project)">
                     <h4 class="text-lg font-semibold text-gray-800">{{ project.name }}</h4>
@@ -31,12 +41,22 @@
 export default {
     data() {
         return {
+            searchQuery: "",
             projects: [
                 { name: "Survey Form", date: "Feb 25, 2025" },
                 { name: "Feedback Form", date: "Feb 20, 2025" },
-                { name: "Registration Form", date: "Feb 15, 2025" }
+                { name: "Registration Form", date: "Feb 15, 2025" },
+                { name: "Customer Satisfaction", date: "Jan 30, 2025" },
+                { name: "Employee Feedback", date: "Jan 20, 2025" }
             ]
         };
+    },
+    computed: {
+        filteredProjects() {
+            return this.projects.filter(project =>
+                project.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+            );
+        }
     },
     methods: {
         createProject() {
@@ -44,6 +64,9 @@ export default {
         },
         openProject(project) {
             alert(`Opening ${project.name}`);
+        },
+        searchForms() {
+            console.log("Searching for:", this.searchQuery);
         }
     }
 };

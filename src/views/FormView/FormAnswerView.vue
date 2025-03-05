@@ -50,12 +50,10 @@ export default {
     async created() {
         this.form = await getForm("projectId", this.formId);
 
-        // Khởi tạo danh sách câu trả lời theo từng câu hỏi
         this.form.questions.forEach(question => {
-            this.answers[question.id] = []; // Mỗi câu hỏi sẽ chứa danh sách câu trả lời của nhiều người
+            this.answers[question.id] = [];
         });
 
-        // Lấy danh sách câu trả lời của từng người
         this.formAnswers = await getFormAnswers(this.formId);
 
         this.formAnswers.forEach(formAnswer => {
@@ -72,7 +70,7 @@ export default {
 
                 this.answers[questionId].push({
                     name: userName,
-                    answer: response.answer || "Chưa trả lời" // Nếu câu trả lời rỗng thì thay bằng "Chưa trả lời"
+                    answer: response.answer || "Chưa trả lời",
                 });
             });
         });

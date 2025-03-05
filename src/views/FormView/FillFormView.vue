@@ -81,7 +81,7 @@ export default {
                 return answer;
             })
             await submitForm(this.formId, { answers: data });
-            alert("Gửi thành công!");
+            this.$router.push(`/fill-form/${this.formId}/completed`);
         },
     }
 };

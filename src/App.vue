@@ -1,7 +1,7 @@
 <template>
     <div id="app">
-        <NavBar v-if="!isAuthPage" />
-        <div :class="{ 'mt-20': !isAuthPage }">
+        <NavBar v-if="hasNavBar" class="mb-2" />
+        <div>
             <router-view></router-view>
         </div>
     </div>
@@ -12,12 +12,23 @@ import NavBar from './components/NavBar.vue';
 
 export default {
     name: "App",
+    data() {
+        return {
+            hasNavBarPage: [
+                "/",
+                "/project",
+                "/project/:projectId"
+            ],
+            projectRoutePattern: /^\/project\/[^/]+$/
+        };
+    },
     components: {
         NavBar,
     },
     computed: {
-        isAuthPage() {
-            return this.$route.path === '/login' || this.$route.path === '/register';
+        hasNavBar() {
+            return this.hasNavBarPage.includes(this.$route.path) ||
+                this.projectRoutePattern.test(this.$route.path);
         }
     }
 };

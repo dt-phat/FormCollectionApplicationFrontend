@@ -8,13 +8,13 @@
                     <input v-model="searchQuery" type="text" placeholder="Nhập tên dự án cần tìm"
                         class="w-full p-3 bg-transparent focus:outline-none text-gray-700" />
                     <button @click="filterProjects"
-                        class="w-40 bg-red-600 text-white  rounded-lg hover:text-gray-900 transition">
-                        🔍 Tìm kiếm
+                        class="w-40 bg-red-600 text-white  rounded-lg hover:bg-red-700 transition hover:scale-105">
+                        <i class="fa-solid fa-magnifying-glass mr-2"></i> Tìm kiếm
                     </button>
                 </div>
                 <button @click="showProjectForm = !showProjectForm"
-                    class="bg-blue-600 text-white px-5 py-3 rounded-lg hover:bg-blue-700 transition shadow-md">
-                    + Tạo Dự Án
+                    class="bg-green-600 text-white px-5 py-3 rounded-lg hover:bg-green-700 transition shadow-md hover:scale-105">
+                    <i class="fa-solid fa-plus mr-2"></i> Tạo Dự Án
                 </button>
             </div>
 
@@ -27,18 +27,18 @@
                 <div class="flex gap-3">
                     <button @click="addProject"
                         class="bg-green-500 text-white px-5 py-2 rounded-lg hover:bg-green-600 transition">
-                        Lưu
+                        Lưu Dự Án
                     </button>
                     <button @click="showProjectForm = false"
                         class="bg-red-500 text-white px-5 py-2 rounded-lg hover:bg-red-600 transition">
-                        Hủy
+                        Hủy Dự Án
                     </button>
                 </div>
             </div>
 
             <ul class="space-y-6">
                 <li v-for="project in filteredProjects" :key="project.id"
-                    class="p-6 bg-white border border-gray-300 rounded-lg shadow-md hover:shadow-lg transition">
+                    class="p-6 bg-white border border-gray-300 rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition">
                     <h2 class="text-xl font-medium text-gray-800">{{ project.name }}</h2>
                     <p class="text-gray-600 mt-2">{{ project.description }}</p>
                     <div class="flex gap-3 mt-4">

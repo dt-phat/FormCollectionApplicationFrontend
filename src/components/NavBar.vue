@@ -1,5 +1,5 @@
 <template>
-    <nav class="bg-white shadow-md p-3 flex items-center justify-between fixed top-0 left-0 w-full z-50">
+    <nav class="bg-white shadow-md p-3 flex items-center justify-between top-0 left-0 w-full z-50">
         <!-- Logo + Tên -->
         <div class="flex items-center space-x-3">
             <button class="text-gray-700 hover:bg-gray-200 p-2 rounded-full focus:outline-none lg:hidden">
