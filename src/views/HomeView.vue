@@ -1,16 +1,5 @@
 <template>
     <div class="min-h-screen p-6">
-        <div class="flex justify-center gap-50 my-10 bg-gray-100 h-40 algin-center">
-            <router-link to="/project" class="flex w-75 h-20 justify-center items-center bg-red-500 outline-3 outline-red-600 outline-offset-2
-                text-white text-2xl px-6 py-3 rounded-lg shadow-md hover:bg-red-700">
-                <i class="fa-solid fa-diagram-project mr-4"></i> Quản Lý Dự Án
-            </router-link>
-            <router-link
-                class="flex w-75 h-20 justify-center items-center bg-blue-500 text-white text-2xl outline-3 outline-blue-600 outline-offset-2 px-6 py-3 rounded-lg shadow-md hover:bg-blue-700"
-                @click="createProject">
-                <i class="fa-solid fa-table-list mr-4"></i> Xem Form Đã Điền
-            </router-link>
-        </div>
 
         <!-- Search Bar -->
         <div class="mb-6 flex justify-center gap-4">

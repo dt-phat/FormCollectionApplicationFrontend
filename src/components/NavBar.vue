@@ -1,42 +1,53 @@
 <template>
-    <nav class="bg-white shadow-md p-3 flex items-center justify-between top-0 left-0 w-full z-50">
-        <!-- Logo + Tên -->
-        <div class="flex items-center space-x-3">
-            <button class="text-gray-700 hover:bg-gray-200 p-2 rounded-full focus:outline-none lg:hidden">
+    <nav class="w-50 bg-white shadow-md px-8 py-2 flex items-center top-0 left-0 w-full z-50">
+        <div class="flex items-center space-x-3 bg-indigo-600 text-white px-4 py-1 rounded-lg shadow-md mr-8">
+            <button class="text-white hover:bg-indigo-700 p-2 rounded-full focus:outline-none lg:hidden">
                 <i class="fas fa-bars text-xl"></i>
             </button>
-            <router-link to="/" class="flex text-2xl font-semibold text-purple-600 items-center">
-                <i class="fa-solid fa-table-list mr-2"></i> MyForms
+            <router-link to="/" class="flex text-lg font-semibold items-center p-2">
+                <i class="fa-brands fa-google text-xl mr-2"></i>
+                <span class="text-xl font-bold tracking-wider">MYFORMS</span>
             </router-link>
         </div>
 
-        <!-- Ô tìm kiếm -->
-        <div class="hidden lg:flex items-center w-full max-w-md bg-gray-100 px-4 py-2 rounded-full shadow-sm">
-            <i class="fas fa-search text-gray-500"></i>
-            <input type="text" placeholder="Search..." class="w-full bg-transparent outline-none px-2 text-gray-700" />
+        <div class="w-50 flex items-center space-x-2 bg-red-600 text-white px-4 py-1 rounded-lg shadow-md mr-8">
+            <router-link to="/project" class="flex text-lg font-semibold items-center p-2">
+                <i class="fa-solid fa-diagram-project mr-2"></i>
+                <span class="text-xl font-bold tracking-wider">Dự Án</span>
+            </router-link>
         </div>
 
-        <!-- Điều hướng + Avatar -->
-        <div class="flex items-center space-x-4 relative">
+        <div class="w-50 flex items-center space-x-2 bg-purple-600 text-white px-4 py-1 rounded-lg shadow-md mr-5">
+            <router-link to="/form" class="flex text-lg font-semibold items-center p-2">
+                <i class="fa-regular fa-folder-open mr-2"></i>
+                <span class="text-xl font-bold tracking-wider">
+                    Điền Form
+                </span>
+            </router-link>
+        </div>
+
+
+        <div class="flex items-center space-x-4 relative ml-auto">
             <router-link v-if="!user" to="/login"
-                class="text-white bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-full text-sm font-medium transition">
+                class="px-4 py-2 bg-indigo-600 text-white rounded-full text-sm font-medium transition duration-300 hover:bg-indigo-700">
                 Đăng Nhập
             </router-link>
             <router-link v-if="!user" to="/register"
-                class="text-white bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-full text-sm font-medium transition">
+                class="px-4 py-2 bg-indigo-600 text-white rounded-full text-sm font-medium transition duration-300 hover:bg-indigo-700">
                 Đăng Ký
             </router-link>
             <div v-else class="relative">
                 <button @click="toggleMenu"
-                    class="text-gray-700 font-semibold px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition">
-                    {{ user.username }}
+                    class="flex items-center px-4 py-2 bg-gray-100 text-gray-700 font-semibold rounded-lg shadow-md transition duration-300 hover:bg-gray-200">
+                    <i class="fa-solid fa-user mr-2"></i> {{ user.username }}
                 </button>
                 <div v-if="menuOpen"
                     class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
-                    <router-link to="/profile" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">Xem
-                        thông tin</router-link>
+                    <router-link to="/profile"
+                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition duration-300">Xem thông
+                        tin</router-link>
                     <button @click="logout"
-                        class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition">Đăng
+                        class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition duration-300">Đăng
                         xuất</button>
                 </div>
             </div>

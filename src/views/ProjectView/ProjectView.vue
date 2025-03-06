@@ -8,7 +8,7 @@
                     <input v-model="searchQuery" type="text" placeholder="Nhập tên dự án cần tìm"
                         class="w-full p-3 bg-transparent focus:outline-none text-gray-700" />
                     <button @click="filterProjects"
-                        class="w-40 bg-red-600 text-white  rounded-lg hover:bg-red-700 transition hover:scale-105">
+                        class="w-40 bg-gray-500 text-white  rounded-lg hover:bg-gray-700 transition hover:scale-105">
                         <i class="fa-solid fa-magnifying-glass mr-2"></i> Tìm kiếm
                     </button>
                 </div>
@@ -31,7 +31,7 @@
                     </button>
                     <button @click="showProjectForm = false"
                         class="bg-red-500 text-white px-5 py-2 rounded-lg hover:bg-red-600 transition">
-                        Hủy Dự Án
+                        <i class="fa-solid fa-xmark mr-2"></i> Hủy Dự Án
                     </button>
                 </div>
             </div>
@@ -44,11 +44,11 @@
                     <div class="flex gap-3 mt-4">
                         <button @click="viewProject(project.id)"
                             class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purle-600 transition">
-                            Xem Dự Án
+                            <i class="fa-solid fa-eye mr-2"></i> Xem Dự Án
                         </button>
                         <button @click="deleteProject(project.id)"
                             class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition">
-                            Xóa Dự Án
+                            <i class="fa-solid fa-trash mr-2"></i> Xóa Dự Án
                         </button>
                     </div>
                 </li>
@@ -93,8 +93,6 @@ export default {
             await deleteProject(id);
             this.$router.go(0);
         },
-        filterProjects() {
-        }
     },
     mounted() {
         this.getAllProjects();
