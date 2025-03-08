@@ -10,18 +10,18 @@
             </router-link>
         </div>
 
-        <div class="w-50 flex items-center space-x-2 bg-red-600 text-white px-4 py-1 rounded-lg shadow-md mr-8">
+        <div class="w-60 flex items-center space-x-2 bg-red-600 text-white px-4 py-1 rounded-lg shadow-md mr-8">
             <router-link to="/project" class="flex text-lg font-semibold items-center p-2">
                 <i class="fa-solid fa-diagram-project mr-2"></i>
                 <span class="text-xl font-bold tracking-wider">Dự Án</span>
             </router-link>
         </div>
 
-        <div class="w-50 flex items-center space-x-2 bg-purple-600 text-white px-4 py-1 rounded-lg shadow-md mr-5">
+        <div class="w-60 flex items-center space-x-2 bg-purple-600 text-white px-4 py-1 rounded-lg shadow-md mr-5">
             <router-link to="/form" class="flex text-lg font-semibold items-center p-2">
                 <i class="fa-regular fa-folder-open mr-2"></i>
                 <span class="text-xl font-bold tracking-wider">
-                    Điền Form
+                    Form Đã Điền
                 </span>
             </router-link>
         </div>

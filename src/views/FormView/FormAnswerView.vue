@@ -1,30 +1,58 @@
 <template>
     <div class="max-w-3xl mx-auto bg-white p-8 rounded-xl shadow-2xl mt-10 border border-gray-200">
-        <div class="flex">
-            <h1 class="text-4xl font-bold text-purple-700 mb-6 text-left">Kết Quả Form:</h1>
-            <button @click="exportToExcel"
-                class=" ml-auto mb-4 px-4 py-2 bg-green-500 hover:scale-105 hover:bg-green-700 text-white rounded-lg shadow">
-                <i class="fa-solid fa-file-excel mr-2"></i> Xuất File Excel
-            </button>
+        <div class="flex justify-between items-center">
+            <h1 class="text-4xl font-bold text-purple-700">Kết Quả Form:</h1>
+            <div class="flex gap-4">
+                <button @click="exportToExcel"
+                    class="px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700">
+                    <i class="fa-solid fa-file-excel mr-2"></i> Xuất File Excel
+                </button>
+            </div>
         </div>
 
         <div v-if="form">
             <h2 class="text-2xl font-semibold text-purple-800 mb-2">Tên: {{ form.name }}</h2>
-            <p class="text-gray-600 mb-6">Mô tả: {{ form.introduction }}</p>
+            <p class="text-gray-600 mb-2">Mô tả: {{ form.introduction }}</p>
 
-            <div v-for="(question, index) in form.questions" :key="index" class="mb-4">
-                <div @click="toggleExpand(index)"
-                    class="cursor-pointer p-5 bg-gray-50 shadow-md border border-gray-300 rounded-xl flex justify-between items-center">
-                    <h3 class="text-lg font-medium text-purple-900">{{ question.question }}</h3>
-                    <i :class="expandedQuestions[index] ? 'fas fa-chevron-down' : 'fas fa-chevron-right'"
-                        class="text-purple-600"></i>
+            <div class="mb-4">
+                <button @click="toggleViewMode"
+                    class="px-4 w-65 py-2 bg-purple-500 text-white rounded-lg shadow hover:bg-purple-700">
+                    {{ isQuestionView ? 'Xem theo form trả lời' : 'Xem theo câu hỏi' }}
+                </button>
+            </div>
+
+            <!-- Chế độ xem theo câu hỏi -->
+            <div v-if="isQuestionView">
+                <div v-for="(question, index) in form.questions" :key="index" class="mb-4">
+                    <div @click="toggleExpand(index)"
+                        class="cursor-pointer p-5 bg-gray-50 shadow-md border border-gray-300 rounded-xl flex justify-between items-center">
+                        <h3 class="text-lg font-medium text-purple-900">{{ question.question }}</h3>
+                        <i :class="expandedQuestions[index] ? 'fas fa-chevron-down' : 'fas fa-chevron-right'"
+                            class="text-purple-600"></i>
+                    </div>
+
+                    <div v-if="expandedQuestions[index]" class="p-4 border border-gray-200 rounded-lg mt-2 bg-gray-100">
+                        <div v-for="(response, i) in answers[question.id]" :key="i"
+                            class="p-2 bg-white shadow-sm rounded-md mb-2">
+                            <strong class="text-purple-800">{{ response.name }}:</strong>
+                            <span class="text-gray-700">{{ formatAnswer(response.answer) }}</span>
+                        </div>
+                    </div>
                 </div>
+            </div>
 
-                <div v-if="expandedQuestions[index]" class="p-4 border border-gray-200 rounded-lg mt-2 bg-gray-100">
-                    <div v-for="(response, i) in answers[question.id]" :key="i"
-                        class="p-2 bg-white shadow-sm rounded-md mb-2">
-                        <strong class="text-purple-800">{{ response.name }}:</strong>
-                        <span class="text-gray-700">{{ formatAnswer(response.answer) }}</span>
+            <!-- Chế độ xem theo form trả lời -->
+            <div v-else>
+                <div v-for="(formAnswer, index) in formAnswers" :key="index"
+                    class="mb-6 p-4 bg-gray-50 shadow-md border border-gray-300 rounded-xl">
+                    <h3 class="text-lg font-medium text-purple-900">Người trả lời: {{ formAnswer.userSummary.firstName
+                        }} {{ formAnswer.userSummary.lastName }}</h3>
+                    <div class="mt-2">
+                        <div v-for="(response, i) in formAnswer.answerResponses" :key="i"
+                            class="p-2 bg-white shadow-sm rounded-md mb-2">
+                            <strong class="text-purple-800">{{ response.questionResponse.question }}:</strong>
+                            <span class="text-gray-700">{{ formatAnswer(response.answer) }}</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -50,7 +78,7 @@ export default {
             formAnswers: [],
             answers: {},
             expandedQuestions: [],
-            previewVisible: true,
+            isQuestionView: true, // true: xem theo câu hỏi, false: xem theo form trả lời
         };
     },
     async created() {
@@ -79,6 +107,9 @@ export default {
         toggleExpand(index) {
             this.expandedQuestions[index] = !this.expandedQuestions[index];
         },
+        toggleViewMode() {
+            this.isQuestionView = !this.isQuestionView;
+        },
         formatAnswer(answer) {
             return Array.isArray(answer) ? answer.join(', ') : answer;
         },
@@ -101,5 +132,4 @@ export default {
     }
 };
 </script>
-
 <style scoped></style>
