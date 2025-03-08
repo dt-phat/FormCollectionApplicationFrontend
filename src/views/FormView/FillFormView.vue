@@ -33,6 +33,12 @@
                             <label class="text-purple-900 cursor-pointer">{{ option }}</label>
                         </div>
                     </div>
+
+                    <!-- File Upload -->
+                    <div v-if="question.type === 'FILE'" class="space-y-2">
+                        <input type="file" @change="handleFileUpload($event, index)"
+                            class="w-full p-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition shadow-sm bg-gray-50" />
+                    </div>
                 </div>
 
                 <button type="submit"
@@ -59,6 +65,7 @@ export default {
         return {
             form: null,
             answers: [],
+            files: {} // Store uploaded files
         };
     },
     created() {
@@ -74,12 +81,36 @@ export default {
                 this.answers[i].questionId = q.id;
             });
         },
+        handleFileUpload(event, index) {
+            const file = event.target.files[0];
+            if (file) {
+                this.files[index] = file;
+                this.answers[index].answer = file.name;
+            }
+        },
         async submitForm() {
+            const formData = new FormData();
+            this.answers.forEach((answer, index) => {
+                if (this.form.questions[index].type === "CHECKBOX") {
+                    formData.append(`answers[${index}][questionId]`, answer.questionId);
+                    formData.append(`answers[${index}][answer]`, answer.answer.join(","));
+                } else {
+                    formData.append(`answers[${index}][questionId]`, answer.questionId);
+                    formData.append(`answers[${index}][answer]`, answer.answer);
+                }
+            });
+
             const data = this.answers.map((answer, index) => {
-                if (this.form.questions[index].type === "CHECKBOX")
-                    return { questionId: answer.questionId, answer: [...answer.answer].join(",") };
+                if (this.form.questions[index].type === "CHECKBOX") {
+                    return { questionId: answer.questionId, answer: [...answer.answer].join(", ") };
+                }
                 return answer;
-            })
+            });
+
+            Object.keys(this.files).forEach(index => {
+                formData.append(`files[${index}]`, this.files[index]);
+            });
+
             await submitForm(this.formId, { answers: data });
             this.$router.push(`/fill-form/${this.formId}/completed`);
         },

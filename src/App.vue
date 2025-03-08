@@ -1,7 +1,7 @@
 <template>
     <div id="app">
-        <NavBar v-if="hasNavBar" class="mb-2" />
-        <div>
+        <NavBar v-if="hasNavBar" class="mb-2 fixed" />
+        <div :class="{ 'mt-20': hasNavBar }">
             <router-view></router-view>
         </div>
     </div>

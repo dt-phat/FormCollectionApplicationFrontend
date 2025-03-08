@@ -19,6 +19,7 @@
                 <option value="TEXT">Trả lời ngắn</option>
                 <option value="CHECKBOX">Hộp kiểm</option>
                 <option value="RADIO">Nút radio</option>
+                <option value="FILE">Tải tệp</option>
             </select>
             <input v-model="question.question" type="text" placeholder="Nội dung câu hỏi"
                 class="w-full p-2 mt-3 border border-gray-300 rounded-lg outline-none text-lg focus:ring-2 focus:ring-purple-400">
@@ -38,6 +39,21 @@
                     class="text-purple-600 font-semibold hover:text-purple-800 transition transform hover:scale-105">
                     + Thêm phương án
                 </button>
+            </div>
+
+            <div v-if="question.type === 'FILE'">
+                <label class="block text-gray-700 font-medium mb-2">Tải tệp:</label>
+                <input type="file" @change="handleFileUpload($event, index)"
+                    class="w-full p-2 border border-gray-300 rounded-lg outline-none shadow-md focus:ring-2 focus:ring-purple-500 hover:shadow-lg transition">
+
+                <div v-if="question.fileName"
+                    class="flex items-center justify-between bg-gray-100 border border-gray-300 rounded-lg p-3 mt-3">
+                    <span class="text-gray-700 font-medium truncate">{{ question.fileName }}</span>
+                    <button @click="removeFile(index)"
+                        class="text-red-500 hover:text-red-700 text-sm font-semibold ml-3">
+                        ✖ Xóa
+                    </button>
+                </div>
             </div>
 
             <button @click="removeQuestion(index)"
@@ -76,6 +92,7 @@
                     <option value="TEXT">Trả lời ngắn</option>
                     <option value="CHECKBOX">Hộp kiểm</option>
                     <option value="RADIO">Nút radio</option>
+                    <option value="FILE">Tải tệp</option>
                 </select>
                 <div class="flex justify-end gap-3">
                     <button @click="showQuestionTypeModal = false"
@@ -95,7 +112,7 @@
 </template>
 
 <script>
-import { getForm } from '../../api/formApi';
+import { getForm, updateForm } from '../../api/formApi';
 
 export default {
     props: {
@@ -115,8 +132,7 @@ export default {
     },
     methods: {
         async getForm() {
-            this.form = await getForm("123", this.formId);
-            console.log(this.form);
+            this.form = await getForm(this.projectId, this.formId);
         },
         addQuestion() {
             this.form.questions.push({ question: "", type: this.selectedQuestionType, options: [] });
@@ -131,9 +147,10 @@ export default {
         removeOption(question, index) {
             question.options.splice(index, 1);
         },
-        saveForm() {
-            createForm(this.projectId, this.form);
-            this.$router.push(`/project/${this.projectId}`);
+        async saveForm() {
+            console.log(this.form);
+            // await updateForm(this.projectId, this.formId, this.form);
+            // this.$router.push(`/project/${this.projectId}`);
         }
     },
     mounted() {

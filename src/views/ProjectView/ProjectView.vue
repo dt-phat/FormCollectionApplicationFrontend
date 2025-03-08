@@ -1,14 +1,19 @@
 <template>
     <div class="container mx-auto p-6 bg-gray-50 min-h-screen flex flex-col items-center">
-        <div class="w-full max-w-4xl bg-white shadow-md rounded-xl p-6">
-            <h1 class="text-3xl font-medium text-gray-800 text-center mb-6">Quản lý Dự Án</h1>
+        <div class="w-full max-w-4xl bg-white shadow-lg rounded-xl p-6">
+            <!-- Tiêu đề chính -->
+            <h1
+                class="text-4xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-indigo-700 uppercase tracking-wide py-2">
+                Quản lý Dự Án
+            </h1>
 
+            <!-- Thanh tìm kiếm & nút tạo dự án -->
             <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-                <div class="w-165 flex bg-gray-100 rounded-lg p-2">
+                <div class="w-full md:w-2/3 flex bg-gray-100 rounded-lg p-2">
                     <input v-model="searchQuery" type="text" placeholder="Nhập tên dự án cần tìm"
                         class="w-full p-3 bg-transparent focus:outline-none text-gray-700" />
                     <button @click="filterProjects"
-                        class="w-40 bg-gray-500 text-white  rounded-lg hover:bg-gray-700 transition hover:scale-105">
+                        class="w-40 bg-gray-500 text-white rounded-lg hover:bg-gray-700 transition hover:scale-105">
                         <i class="fa-solid fa-magnifying-glass mr-2"></i> Tìm kiếm
                     </button>
                 </div>
@@ -18,12 +23,13 @@
                 </button>
             </div>
 
+            <!-- Form tạo dự án -->
             <div v-if="showProjectForm" class="bg-white p-6 rounded-lg shadow-md mb-6 border border-gray-300">
-                <h2 class="text-xl font-medium text-gray-800 mb-4">Tạo Dự Án Mới</h2>
+                <h2 class="text-xl font-semibold text-gray-800 border-l-4 border-indigo-500 pl-3">Tạo Dự Án Mới</h2>
                 <input v-model="newProject.name" type="text" placeholder="Tên dự án"
-                    class="w-full p-3 border border-gray-300 rounded-lg mb-3 focus:outline-none">
+                    class="w-full p-3 border border-gray-300 rounded-lg mb-3 focus:ring-2 focus:ring-indigo-500">
                 <textarea v-model="newProject.description" placeholder="Mô tả dự án"
-                    class="w-full p-3 border border-gray-300 rounded-lg mb-3 focus:outline-none"></textarea>
+                    class="w-full p-3 border border-gray-300 rounded-lg mb-3 focus:ring-2 focus:ring-indigo-500"></textarea>
                 <div class="flex gap-3">
                     <button @click="addProject"
                         class="bg-green-500 text-white px-5 py-2 rounded-lg hover:bg-green-600 transition">
@@ -36,14 +42,15 @@
                 </div>
             </div>
 
+            <!-- Danh sách dự án -->
             <ul class="space-y-6">
                 <li v-for="project in filteredProjects" :key="project.id"
-                    class="p-6 bg-white border border-gray-300 rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition">
-                    <h2 class="text-xl font-medium text-gray-800">{{ project.name }}</h2>
+                    class="p-6 bg-white border border-gray-300 rounded-lg shadow-md hover:shadow-lg hover:scale-105 transition border-l-4 border-indigo-500">
+                    <h2 class="text-xl font-semibold text-gray-800">{{ project.name }}</h2>
                     <p class="text-gray-600 mt-2">{{ project.description }}</p>
                     <div class="flex gap-3 mt-4">
                         <button @click="viewProject(project.id)"
-                            class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purle-600 transition">
+                            class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition">
                             <i class="fa-solid fa-eye mr-2"></i> Xem Dự Án
                         </button>
                         <button @click="deleteProject(project.id)"
@@ -65,8 +72,7 @@ export default {
             searchQuery: "",
             showProjectForm: false,
             newProject: { name: "", description: "" },
-            projects: [
-            ],
+            projects: [],
         };
     },
     computed: {
@@ -99,9 +105,4 @@ export default {
     }
 };
 </script>
-
-<style scoped>
-.container {
-    max-width: 1000px;
-}
-</style>
+<style scoped></style>
