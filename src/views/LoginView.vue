@@ -36,7 +36,9 @@ export default {
             try {
                 await login(this.username, this.password);
                 await this.$router.push("/");
+                window.location.reload();
                 this.$emit("user-logged-in");
+                localStorage.setItem("tendangnhap",this.username);
 
             } catch (error) {
                 this.errorMessage = "Tên đăng nhập hoặc mật khẩu không đúng!";
