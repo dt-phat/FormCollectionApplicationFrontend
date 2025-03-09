@@ -4,19 +4,24 @@
         <div :class="{ 'mt-20': hasNavBar }">
             <router-view></router-view>
         </div>
-        <Footer />
+        <Footer v-if="hasFooter" />
     </div>
 </template>
 
 <script>
-import NavBar from './components/NavBar.vue';
 import Footer from './components/Footer.vue';
+import NavBar from './components/NavBar.vue';
 
 export default {
     name: "App",
     data() {
         return {
             hasNavBarPage: [
+                "/",
+                "/project",
+                "/project/:projectId"
+            ],
+            hasFooterPages: [
                 "/",
                 "/project",
                 "/project/:projectId"
@@ -32,7 +37,12 @@ export default {
         hasNavBar() {
             return this.hasNavBarPage.includes(this.$route.path) ||
                 this.projectRoutePattern.test(this.$route.path);
+        },
+        hasFooter() {
+            return this.hasFooterPages.includes(this.$route.path) ||
+                this.projectRoutePattern.test(this.$route.path);
         }
+        
     }
 };
 </script>
