@@ -25,7 +25,7 @@
                     <span>Form Đã Điền</span>
                 </router-link>
             </div>
-           <!-- button user chỉ hiện khi là admin -->
+            <!-- button user chỉ hiện khi là admin -->
             <div v-if="tendangnhap === 'admin'" class="w-50 bg-blue-500 text-white px-5 py-2 rounded-lg shadow-md hover:bg-blue-600">
                 <router-link to="/users" class="flex items-center text-lg font-semibold">
                     <i class="fa-solid fa-users mr-2"></i>
@@ -90,8 +90,8 @@ export default {
             this.menuOpen = !this.menuOpen;
         },
         logout() {
-            localStorage.removeItem('token');
-            localStorage.removeItem("tendangnhap");
+            localStorage.removeItem('token'); 
+            localStorage.removeItem("tendangnhap"); // xóa tendangnhap khỏi local Storage
             this.user = null;
             this.menuOpen = false;
             this.$router.push('/');
