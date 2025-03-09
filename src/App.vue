@@ -4,11 +4,13 @@
         <div :class="{ 'mt-20': hasNavBar }">
             <router-view></router-view>
         </div>
+        <Footer />
     </div>
 </template>
 
 <script>
 import NavBar from './components/NavBar.vue';
+import Footer from './components/Footer.vue';
 
 export default {
     name: "App",
@@ -24,6 +26,7 @@ export default {
     },
     components: {
         NavBar,
+        Footer,
     },
     computed: {
         hasNavBar() {
