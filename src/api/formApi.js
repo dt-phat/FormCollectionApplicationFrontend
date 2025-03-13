@@ -43,3 +43,24 @@ export const openForm = async (projectId, formId) => {
 export const closeForm = async (projectId, formId) => {
     await api.post(`/projects/${projectId}/forms/${formId}/close`);
 }
+
+export const downloadFile = async (formId, questionId, fileName) => {
+    const response = await api.get(`/${formId}/formAnswers/download/${questionId}`, {
+        responseType: 'blob'
+    });
+
+    const url = window.URL.createObjectURL(response);
+
+    createDownloadLink(url, fileName);
+};
+
+const createDownloadLink = (url, fileName) => {
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+};
+

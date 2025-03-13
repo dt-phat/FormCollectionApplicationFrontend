@@ -25,7 +25,14 @@
                     <div class="p-4 border bg-gray-100 rounded-lg mt-2">
                         <div v-for="(response, i) in answers" :key="i" class="p-2 bg-white shadow-sm rounded-md mb-2">
                             <strong class="text-purple-800">{{ response.name }}:</strong>
-                            <span class="text-gray-700">{{ response.answer || 'Chưa trả lời' }}</span>
+                            <span class="text-gray-700">{{ response.answer.text || 'Chưa trả lời' }}</span>
+                            <div class="mt-2">
+                                <button v-if="response.answer.fileName"
+                                    @click="downloadFile(response.answer.questionId, response.answer.fileName)"
+                                    class="bg-blue-500 hover:bg-blue-700 text-white px-3 py-1 rounded-lg text-sm">
+                                    <i class="fa-solid fa-download mr-2"></i> Tải File
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -38,7 +45,13 @@
                     <div v-for="(answer, question) in entry.answers" :key="question"
                         class="p-2 bg-white shadow-sm rounded-md mt-2">
                         <strong class="text-purple-800">{{ question }}:</strong>
-                        <span class="text-gray-700">{{ answer || 'Chưa trả lời' }}</span>
+                        <span class="text-gray-700">{{ answer.text || 'Chưa trả lời' }}</span>
+                        <div class="mt-2">
+                            <button v-if="answer.fileName" @click="downloadFile(answer.questionId, answer.fileName)"
+                                class="bg-blue-500 hover:bg-blue-700 text-white px-3 py-1 rounded-lg text-sm">
+                                <i class="fa-solid fa-download mr-2"></i> Tải File
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -59,7 +72,14 @@
                         <tr v-for="(row, index) in tableData" :key="index" class="text-center">
                             <td class="border border-gray-300 px-4 py-2 font-medium">{{ row.user }}</td>
                             <td v-for="(value, idx) in row.answers" :key="idx" class="border border-gray-300 px-4 py-2">
-                                {{ value || 'Chưa trả lời' }}
+                                {{ value.text || 'Chưa trả lời' }}
+                                <div class="mt-2">
+                                    <button v-if="value.fileName"
+                                        @click="downloadFile(value.questionId, value.fileName)"
+                                        class="bg-blue-500 hover:bg-blue-700 text-white px-3 py-1 rounded-lg text-sm">
+                                        <i class="fa-solid fa-download mr-2"></i> Tải File
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     </tbody>
@@ -74,7 +94,7 @@
 
 <script>
 import * as XLSX from "xlsx";
-import { getFormSummary } from "../../api/formApi";
+import { getFormSummary, downloadFile } from "../../api/formApi";
 
 export default {
     props: {
@@ -91,7 +111,6 @@ export default {
         try {
             const response = await getFormSummary("projectId", this.formId);
             const result = response?.result;
-            console.log(result);
             if (result) {
                 this.formName = result.form?.name || "Form Không Tên";
                 this.rowData = result.rowData || [];
@@ -157,6 +176,9 @@ export default {
             const workbook = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(workbook, worksheet, "Form Kết Quả");
             XLSX.writeFile(workbook, `${this.formName}_Ket_Qua.xlsx`);
+        },
+        async downloadFile(questionId, fileName) {
+            await downloadFile(this.formId, questionId, fileName);
         }
     }
 };
