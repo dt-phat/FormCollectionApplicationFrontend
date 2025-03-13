@@ -149,8 +149,8 @@ export default {
         },
         async saveForm() {
             console.log(this.form);
-            // await updateForm(this.projectId, this.formId, this.form);
-            // this.$router.push(`/project/${this.projectId}`);
+            await updateForm(this.projectId, this.formId, this.form);
+            this.$router.push(`/project/${this.projectId}`);
         }
     },
     mounted() {

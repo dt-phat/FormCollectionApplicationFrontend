@@ -90,30 +90,36 @@ export default {
         },
         async submitForm() {
             const formData = new FormData();
-            this.answers.forEach((answer, index) => {
-                if (this.form.questions[index].type === "CHECKBOX") {
-                    formData.append(`answers[${index}][questionId]`, answer.questionId);
-                    formData.append(`answers[${index}][answer]`, answer.answer.join(","));
-                } else {
-                    formData.append(`answers[${index}][questionId]`, answer.questionId);
-                    formData.append(`answers[${index}][answer]`, answer.answer);
-                }
+
+            // Tạo object JSON chứa câu trả lời
+            // Chuyển payload thành JSON string
+            const payload = JSON.stringify({
+                answers: this.answers.map(answer => ({
+                    questionId: answer.questionId,
+                    answer: answer.answer instanceof File ? answer.answer.name : answer.answer
+                }))
             });
 
-            const data = this.answers.map((answer, index) => {
-                if (this.form.questions[index].type === "CHECKBOX") {
-                    return { questionId: answer.questionId, answer: [...answer.answer].join(", ") };
-                }
-                return answer;
-            });
-
+            // Thêm JSON vào formData
+            formData.append("data", payload);
+            // Thêm file vào nếu có
             Object.keys(this.files).forEach(index => {
-                formData.append(`files[${index}]`, this.files[index]);
+                const file = this.files[index];
+                if (file) {
+                    const questionId = this.answers[index].questionId;
+                    formData.append(`files[${questionId}]`, file);
+                }
             });
 
-            await submitForm(this.formId, { answers: data });
-            this.$router.push(`/fill-form/${this.formId}/completed`);
-        },
+            try {
+                await submitForm(this.formId, formData);
+                this.$router.push(`/fill-form/${this.formId}/completed`);
+            } catch (error) {
+                console.error("Lỗi khi gửi form:", error);
+            }
+        }
+
     }
 };
 </script>
+<style></style>

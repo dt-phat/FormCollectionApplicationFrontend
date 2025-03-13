@@ -7,6 +7,13 @@ const api = axios.create({
     },
 });
 
+export const multipart = axios.create({
+    baseURL: "http://localhost:8080/api",
+    headers: {
+        "Content-Type": "multipart/form-data",
+    },
+});
+
 function isTokenExpired(token) {
     try {
         const payload = JSON.parse(atob(token.split(".")[1]));
@@ -17,6 +24,14 @@ function isTokenExpired(token) {
 }
 
 api.interceptors.request.use((config) => {
+    const token = localStorage.getItem("token"); // Lấy token từ localStorage
+    if (token && !isTokenExpired(token)) {
+        config.headers.Authorization = `Bearer ${token}`; // Gắn token vào headers
+    }
+    return config;
+}, (error) => Promise.reject(error));
+
+multipart.interceptors.request.use((config) => {
     const token = localStorage.getItem("token"); // Lấy token từ localStorage
     if (token && !isTokenExpired(token)) {
         config.headers.Authorization = `Bearer ${token}`; // Gắn token vào headers

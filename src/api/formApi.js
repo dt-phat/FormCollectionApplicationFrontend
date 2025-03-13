@@ -1,4 +1,5 @@
 import api from "./axios";
+import { multipart } from "./axios";
 
 export const createForm = async (projectId, data) => {
     const response = await api.post(`/projects/${projectId}/forms`, data);
@@ -16,9 +17,10 @@ export const getForm = async (projectId, formId) => {
 }
 
 export const submitForm = async (formId, data) => {
-    const response = await api.post(`/${formId}/formAnswers`, data);
+    const response = await multipart.post(`/${formId}/formAnswers`, data);
     return response.result;
 }
+
 
 export const getFormAnswers = async (formId) => {
     const response = await api.get(`/${formId}/formAnswers`);

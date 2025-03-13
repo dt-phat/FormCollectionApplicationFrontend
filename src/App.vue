@@ -4,12 +4,12 @@
         <div :class="{ 'mt-20': hasNavBar }">
             <router-view></router-view>
         </div>
-        <Footer v-if="hasFooter" />
+        <!-- <Footer v-if="hasFooter" /> -->
     </div>
 </template>
 
 <script>
-import Footer from './components/Footer.vue';
+// import Footer from './components/Footer.vue';
 import NavBar from './components/NavBar.vue';
 
 export default {
@@ -31,7 +31,7 @@ export default {
     },
     components: {
         NavBar,
-        Footer,
+        // Footer,
     },
     computed: {
         hasNavBar() {
@@ -42,7 +42,7 @@ export default {
             return this.hasFooterPages.includes(this.$route.path) ||
                 this.projectRoutePattern.test(this.$route.path);
         }
-        
+
     }
 };
 </script>

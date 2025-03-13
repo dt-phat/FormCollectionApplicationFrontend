@@ -147,8 +147,9 @@ export default {
                 this.form.questions[index].fileData = file;
             }
         },
-        saveForm() {
-            createForm(this.projectId, this.form);
+        async saveForm() {
+            console.log(this.form);
+            await createForm(this.projectId, this.form);
             this.$router.push(`/project/${this.projectId}`);
         }
     },
