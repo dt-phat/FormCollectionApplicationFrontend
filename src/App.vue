@@ -19,7 +19,8 @@ export default {
             hasNavBarPage: [
                 "/",
                 "/project",
-                "/project/:projectId"
+                "/project/:projectId",
+                "/users"
             ],
             hasFooterPages: [
                 "/",
