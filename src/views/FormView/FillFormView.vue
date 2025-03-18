@@ -2,8 +2,7 @@
     <div
         class="max-w-3xl mx-auto bg-gradient-to-b from-purple-50 to-white p-8 rounded-xl shadow-2xl mt-10 border border-gray-200">
         <h1 class="text-4xl font-bold text-purple-700 mb-6 text-center">Điền Form</h1>
-
-        <div v-if="form">
+        <div v-if="form?.status === 'OPEN'">
             <h2 class="text-2xl font-semibold text-purple-800 mb-2">{{ form.name }}</h2>
             <p class="text-gray-600 mb-6">{{ form.introduction }}</p>
 
@@ -47,14 +46,23 @@
                 </button>
             </form>
         </div>
-
-        <div v-else>
-            <p class="text-gray-500 text-center">Không tìm thấy form.</p>
+        <div v-else class="p-2">
+            <p
+                class="text-red-600 text-center text-lg bg-red-100 h-32 flex flex-col items-center justify-center rounded-xl shadow-md border border-red-300">
+                <span class="font-semibold">
+                    {{ !form ? "Không tìm thấy form." : "Chủ sở hữu đã đóng form!" }}
+                </span>
+                <RouterLink to="/"
+                    class="mt-4 bg-purple-600 hover:bg-purple-600 text-white font-medium rounded-lg px-4 py-2 transition duration-300 shadow-md">
+                    Quay về trang chủ
+                </RouterLink>
+            </p>
         </div>
     </div>
 </template>
 
 <script>
+import { RouterLink } from 'vue-router';
 import { getForm, submitForm } from '../../api/formApi';
 
 export default {
@@ -65,7 +73,7 @@ export default {
         return {
             form: null,
             answers: [],
-            files: {} // Store uploaded files
+            files: {}
         };
     },
     created() {
@@ -73,7 +81,7 @@ export default {
     },
     methods: {
         async loadForm() {
-            this.form = await getForm("123", this.formId);
+            this.form = await getForm("projectId", this.formId);
             this.answers = this.form.questions.map(q =>
                 q.type === "CHECKBOX" ? { questionId: null, answer: [] } : { questionId: null, answer: null }
             );
@@ -96,9 +104,11 @@ export default {
             const payload = JSON.stringify({
                 answers: this.answers.map(answer => ({
                     questionId: answer.questionId,
-                    answer: answer.answer instanceof File ? answer.answer.name : answer.answer
+                    answer: answer.answer instanceof File ? answer.answer.name : String(answer.answer)
                 }))
             });
+
+            console.log(payload);
 
             // Thêm JSON vào formData
             formData.append("data", payload);
@@ -113,7 +123,7 @@ export default {
 
             try {
                 await submitForm(this.formId, formData);
-                this.$router.push(`/fill-form/${this.formId}/completed`);
+                // this.$router.push(`/fill-form/${this.formId}/completed`);
             } catch (error) {
                 console.error("Lỗi khi gửi form:", error);
             }
