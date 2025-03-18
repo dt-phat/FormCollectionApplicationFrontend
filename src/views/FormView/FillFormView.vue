@@ -10,7 +10,6 @@
                 <div v-for="(question, index) in form.questions" :key="index"
                     class="p-5 rounded-xl bg-white shadow-md border border-gray-300 hover:shadow-lg transition duration-200">
                     <label class="block text-lg font-medium text-purple-900 mb-3">{{ question.question }}</label>
-
                     <!-- Input Text -->
                     <input v-if="question.type === 'TEXT'" v-model="answers[index].answer" type="text"
                         class="w-full p-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition shadow-sm bg-gray-50" />
@@ -82,6 +81,7 @@ export default {
     methods: {
         async loadForm() {
             this.form = await getForm("projectId", this.formId);
+            this.form.questions.sort((a, b) => a.numericalOrder - b.numericalOrder);
             this.answers = this.form.questions.map(q =>
                 q.type === "CHECKBOX" ? { questionId: null, answer: [] } : { questionId: null, answer: null }
             );
@@ -98,9 +98,6 @@ export default {
         },
         async submitForm() {
             const formData = new FormData();
-
-            // Tạo object JSON chứa câu trả lời
-            // Chuyển payload thành JSON string
             const payload = JSON.stringify({
                 answers: this.answers.map(answer => ({
                     questionId: answer.questionId,
@@ -123,7 +120,7 @@ export default {
 
             try {
                 await submitForm(this.formId, formData);
-                // this.$router.push(`/fill-form/${this.formId}/completed`);
+                this.$router.push(`/fill-form/${this.formId}/completed`);
             } catch (error) {
                 console.error("Lỗi khi gửi form:", error);
             }

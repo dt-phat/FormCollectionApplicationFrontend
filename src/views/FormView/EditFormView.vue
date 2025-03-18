@@ -148,6 +148,10 @@ export default {
             question.options.splice(index, 1);
         },
         async saveForm() {
+            this.form.questions = this.form.questions.map((question, index) => ({
+                ...question,
+                numericalOrder: index + 1,
+            }));
             console.log(this.form);
             await updateForm(this.projectId, this.formId, this.form);
             this.$router.push(`/project/${this.projectId}`);

@@ -125,6 +125,7 @@ export default {
             this.form.questions.push({
                 question: "",
                 type: this.selectedQuestionType,
+
                 options: [],
             });
             this.showQuestionTypeModal = false;
@@ -152,6 +153,10 @@ export default {
             }, 500);
         },
         async saveForm() {
+            this.form.questions = this.form.questions.map((question, index) => ({
+                ...question,
+                numericalOrder: index + 1, // Thứ tự câu hỏi bắt đầu từ 1
+            }));
             console.log(this.form);
             this.showToast();
             await createForm(this.projectId, this.form);
