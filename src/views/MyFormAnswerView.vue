@@ -20,6 +20,13 @@
                                 <td class="border p-2">{{ answer.questionResponse.question }}</td>
                                 <td class="border p-2" :class="{ 'text-red-500': answer.answer !== answer.correct }">
                                     {{ answer.answer }}
+                                    <div class="mt-2">
+                                        <button v-if="answer.questionResponse.type == 'FILE'"
+                                            @click="downloadFile(form.formSummary.id, answer.id, answer.answer)"
+                                            class="bg-blue-500 hover:bg-blue-700 text-white px-3 py-1 rounded-lg text-sm">
+                                            <i class="fa-solid fa-download mr-2"></i> Tải File
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>
@@ -32,37 +39,24 @@
 
 <script>
 import { getAllFormAnswers } from "../api/infoApi"
+import { downloadFile } from "../api/formApi";
 export default {
     data() {
         return {
-            formsA: [
-                {
-                    id: 1,
-                    name: "Bài kiểm tra Toán",
-                    answers: [
-                        { question: "2 + 2 =", answer: "4", correct: "4" },
-                        { question: "5 * 6 =", answer: "30", correct: "30" },
-                        { question: "10 / 2 =", answer: "4", correct: "5" }
-                    ]
-                },
-                {
-                    id: 2,
-                    name: "Bài kiểm tra Lịch sử",
-                    answers: [
-                        { question: "Năm 1945 xảy ra sự kiện gì?", answer: "CMT8", correct: "Cách mạng tháng 8" },
-                        { question: "Ai là chủ tịch đầu tiên của Việt Nam?", answer: "Hồ Chí Minh", correct: "Hồ Chí Minh" }
-                    ]
-                }
-            ],
             forms: [],
             selectedForm: null,
         };
     },
     methods: {
         toggleSelectForm(id) {
-            if (this.selectedForm?.id === id) this.selectedForm = null;
-            else this.selectedForm = this.forms.find(form => form.id === id);
-        }
+            // if (this.selectedForm?.id === id) this.selectedForm = null;
+            // else
+            this.selectedForm = this.forms.find(form => form.id === id);
+        },
+        async downloadFile(formId, questionId, fileName) {
+            console.log(formId, questionId, fileName);
+            await downloadFile(formId, questionId, fileName);
+        },
     },
     async mounted() {
         this.forms = await getAllFormAnswers();

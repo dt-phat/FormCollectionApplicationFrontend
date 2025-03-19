@@ -178,6 +178,7 @@ export default {
             XLSX.writeFile(workbook, `${this.formName}_Ket_Qua.xlsx`);
         },
         async downloadFile(questionId, fileName) {
+            console.log(this.formId, questionId, fileName);
             await downloadFile(this.formId, questionId, fileName);
         }
     }
