@@ -19,7 +19,8 @@ export default {
             hasNavBarPage: [
                 "/",
                 "/project",
-                "/project/:projectId"
+                "/project/:projectId",
+                "/form",
             ],
             hasFooterPages: [
                 "/",
@@ -31,7 +32,6 @@ export default {
     },
     components: {
         NavBar,
-        // Footer,
     },
     computed: {
         hasNavBar() {
