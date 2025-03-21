@@ -15,8 +15,8 @@
             <span 
             class="p-2 rounded inline-block whitespace-pre-wrap" 
             :class="msg.role === 'user' ? 'bg-blue-200' : 'bg-gray-200'"
+            v-html="renderMarkdown( extractOutsideBackticks(msg.text))"
             >
-                {{ extractOutsideBackticks(msg.text) }}
             </span>
         </div>
         <div ref="bottomRef"></div>
@@ -51,8 +51,12 @@ export default {
     const parentWidth = ref(500); // Giá trị mặc định
 
     const model = genAI.getGenerativeModel({ 
-      model: "gemini-1.5-flash",
+      model: "gemini-2.0-flash",
       systemInstruction: systemInstruction,
+      tools: [
+      {
+        codeExecution: {},
+      },]
     });
     const chat = model.startChat({ history: [] });
 
@@ -92,7 +96,13 @@ export default {
       return text.replace(/```[\s\S]+?```/g, '').trim();
     }
 
-     const updateWidth = () => {
+    function renderMarkdown(text) {
+      return text
+        .replace(/\*\*(.*?)\*\*/g, "<b class='font-bold'>$1</b>") // **đậm**
+        .replace(/\*(.*?)\*/g, "<i class='italic'>$1</i>");   // *nghiêng*
+    }
+
+    const updateWidth = () => {
       if (parentRef.value) {
         parentWidth.value = parentRef.value.clientWidth;
       }
@@ -107,7 +117,7 @@ export default {
       window.removeEventListener('resize', updateWidth);
     });
 
-    return { messages, input, open, bottomRef, sendMessage, extractOutsideBackticks, parentRef, parentWidth };
+    return { messages, input, open, bottomRef, sendMessage, extractOutsideBackticks, parentRef, parentWidth, renderMarkdown };
   }
 };
 </script>
