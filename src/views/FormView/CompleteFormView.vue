@@ -3,7 +3,6 @@
         <h1 class="text-4xl font-bold text-purple-700 mb-4">Cảm ơn bạn!</h1>
         <p class="text-gray-600 mb-6">Chúng tôi đã nhận được phản hồi của bạn. Cảm ơn bạn đã dành thời gian để điền vào
             biểu mẫu.</p>
-
         <router-link to="/"
             class="px-6 py-3 bg-purple-600 text-white font-semibold rounded-lg shadow-md hover:bg-purple-700 transition">
             Quay về trang chủ

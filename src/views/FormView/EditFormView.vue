@@ -1,5 +1,16 @@
 <template>
-    <div class="container mx-auto p-8 bg-gray-100 min-h-screen flex flex-col items-center">
+    <!-- Nút chuyển chế độ -->
+    <button @click="showHelper = !showHelper" 
+        class="fixed top-4 right-4 z-[9999] px-5 py-3 text-lg font-bold bg-gradient-to-r from-blue-500 to-indigo-600 
+            text-white rounded-full shadow-xl hover:scale-110 transition-transform duration-300 
+            ring-2 ring-white hover:ring-4 animate-pulse">
+        {{ showHelper ? 'Ẩn trợ lý' : 'Hiện trợ lý' }}
+    </button>
+    <div class="flex gap-0 transition-all duration-300">
+        <!-- Phần nội dung chính (co lại khi bot mở) -->
+        <div v-show="!showHelper || isLargeScreen"  
+            :class="{'flex-1': !showHelper, 'w-[60%]': showHelper}" class="transition-all duration-300">
+            <div class="container mx-auto p-8 bg-gray-100 min-h-screen flex flex-col items-center">
         <!-- Form container -->
         <div class="w-full max-w-3xl bg-white shadow-lg rounded-xl p-6">
             <h1 class="text-2xl font-bold text-gray-800 mb-6 text-center">Cập Nhật Form</h1>
@@ -106,18 +117,28 @@
                 </div>
             </div>
         </div>
-
-
+    </div>
+    </div>
+        <!-- Ô chat bot (Hiển thị khi mở) -->
+        <div v-if="showHelper" 
+            :class="{'w-full': !isLargeScreen, 'w-[50%]': isLargeScreen}" 
+            class="transition-all duration-300">
+            <Helper @botResponse="handleBotResponse" :form="form" />
+        </div>
     </div>
 </template>
 
 <script>
 import { getForm, updateForm } from '../../api/formApi';
+import Helper from '../../components/Helper.vue';
 
 export default {
     props: {
         projectId: String,
         formId: String,
+    },
+    components: {
+        Helper
     },
     data() {
         return {
@@ -127,21 +148,53 @@ export default {
                 questions: []
             },
             showQuestionTypeModal: false,
-            selectedQuestionType: "TEXT"
+            selectedQuestionType: "TEXT",
+            showHelper: false,
+            isLargeScreen: window.innerWidth >= 768
         };
     },
     methods: {
+        handleBotResponse(message) {
+            console.log("Bot phản hồi:", message);
+
+            // Loại bỏ chữ "json" nếu nó có trong chuỗi phản hồi
+            if (message && typeof message === "string" && message.startsWith("json")) {
+                message = message.replace(/^json\s*/, ""); 
+            }
+
+            let botForm;
+            try {
+                botForm = JSON.parse(message);
+            } catch (error) {
+                console.error("Lỗi khi phân tích JSON:", error);
+                return;
+            }
+
+            // Cập nhật dữ liệu form
+            this.form = {
+                ...this.form,
+                ...botForm
+            };
+        },
         async getForm() {
             this.form = await getForm(this.projectId, this.formId);
         },
         addQuestion() {
-            this.form.questions.push({ question: "", type: this.selectedQuestionType, options: [] });
+            this.form.questions.push({ 
+                question: "", 
+                type: this.selectedQuestionType, 
+                options: [],
+                numericalOrder: this.form.questions.length
+             });
             this.showQuestionTypeModal = false;
         },
         removeQuestion(index) {
             this.form.questions.splice(index, 1);
         },
         addOption(question) {
+            if (!Array.isArray(question.options)) {
+                question.options = [];
+            }
             question.options.push("");
         },
         removeOption(question, index) {
@@ -154,6 +207,9 @@ export default {
         }
     },
     mounted() {
+        window.addEventListener("resize", () => {
+            this.isLargeScreen = window.innerWidth >= 768;
+        })
         this.getForm();
     }
 };
