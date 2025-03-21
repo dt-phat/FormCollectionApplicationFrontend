@@ -93,12 +93,28 @@ export default {
 
             // Tạo object JSON chứa câu trả lời
             // Chuyển payload thành JSON string
+            // const payload = JSON.stringify({
+            //     answers: this.answers.map(answer => ({
+            //         questionId: answer.questionId,
+            //         answer: answer.answer instanceof File ? answer.answer.name : answer.answer
+            //     }))
+            // });
+
+            // Chuyển đổi trước khi gửi
+            this.answers.forEach(answer => {
+                if (Array.isArray(answer.answer)) {
+                    answer.answer = answer.answer.join(", "); // Chuyển từ mảng sang chuỗi
+                }
+            });
+
+            // Sau đó mới stringify và gửi đi
             const payload = JSON.stringify({
                 answers: this.answers.map(answer => ({
                     questionId: answer.questionId,
-                    answer: answer.answer instanceof File ? answer.answer.name : answer.answer
+                    answer: String(answer.answer ?? "") // Đảm bảo là chuỗi, tránh null/undefined
                 }))
             });
+
 
             // Thêm JSON vào formData
             formData.append("data", payload);
