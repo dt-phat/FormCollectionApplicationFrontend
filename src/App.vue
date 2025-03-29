@@ -20,7 +20,8 @@ export default {
                 "/",
                 "/project",
                 "/project/:projectId",
-                "/form",
+                "/form", ,
+                "/users"
             ],
             hasFooterPages: [
                 "/",

@@ -168,10 +168,20 @@ export default {
     methods: {
         exportToExcel() {
             const headers = ["Người Dùng", ...this.tableHeaders];
+
             const data = this.rowData.map(entry => [
                 entry["User name"],
-                ...this.tableHeaders.map(header => entry[header] || "Chưa trả lời")
+                ...this.tableHeaders.map(header => {
+                    const value = entry[header];
+                    if (typeof value === "object" && value !== null) {
+                        return value.text || JSON.stringify(value); // Lấy text hoặc stringify nếu là object
+                    }
+                    return value || "Chưa trả lời"; // Nếu giá trị null hoặc undefined, trả về "Chưa trả lời"
+                })
             ]);
+
+            console.log("Dữ liệu xuất ra Excel:", { headers, data }); // Kiểm tra lại dữ liệu
+
             const worksheet = XLSX.utils.aoa_to_sheet([headers, ...data]);
             const workbook = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(workbook, worksheet, "Form Kết Quả");
@@ -180,7 +190,7 @@ export default {
         async downloadFile(questionId, fileName) {
             console.log(this.formId, questionId, fileName);
             await downloadFile(this.formId, questionId, fileName);
-        }
+        },
     }
 };
 </script>

@@ -88,6 +88,23 @@
             </li>
         </ul>
     </div>
+    <div v-if="showDeleteToast"
+        class="fixed bottom-5 right-5 w-96 bg-red-600 text-white px-6 py-4 rounded-lg shadow-xl transition-transform duration-500 transform scale-95">
+        <div class="flex items-center gap-3">
+            <i class="fa-solid fa-exclamation-circle text-2xl"></i>
+            <span class="font-medium text-lg">Bạn có chắc chắn muốn xóa?</span>
+        </div>
+        <div class="flex justify-end gap-3 mt-3">
+            <button @click="confirmDeleteProject"
+                class="bg-white text-red-600 px-4 py-2 rounded-lg hover:bg-gray-200 transition shadow-md hover:scale-105">
+                Xác nhận
+            </button>
+            <button @click="showDeleteToast = false"
+                class="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-400 transition shadow-md hover:scale-105">
+                Hủy
+            </button>
+        </div>
+    </div>
 </template>
 
 
@@ -110,6 +127,8 @@ export default {
 
             },
             shareForms: [],
+            showDeleteToast: false,
+            deleteFormId: null,
         };
     },
     computed: {
@@ -148,7 +167,11 @@ export default {
             this.$router.push(`/project/${this.projectId}/form/${id}`);
         },
         async deleteForm(id) {
-            await deleteForm("123", id);
+            this.showDeleteToast = true;
+            this.deleteFormId = id;
+        },
+        async confirmDeleteProject() {
+            await deleteForm("projectId", this.deleteFormId);
             this.$router.go(0);
         },
         getLink(formId) {
